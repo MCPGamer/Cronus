@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Benutzerlogin</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="Personenverwaltung" />
+<meta name="author" content="ZLI" />
+
+<!-- Bootstrap core CSS -->
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col-12">
+				<h1>Willkommen bei Cronus</h1>
+				<ul>
+					<a th:href='@{signIn}'><li>Einloggen</li></a>
+					<button value="Log Out"
+						onclick="onLogOut()">Ausloggen</button>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<script type="text/javascript">
+		function onLogOut(){
+		  	localStorage.setItem("token", null);
+		}</script>
+</body>
+</html>

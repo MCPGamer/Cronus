@@ -26,7 +26,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.cors().and().csrf().disable().authorizeRequests().anyRequest().authenticated().and()
+		http.cors().and().csrf().disable().authorizeRequests()
+				.antMatchers("/").permitAll()
+				.antMatchers(SecurityConstants.AUTH_LOGIN_URL).permitAll()
+				.antMatchers("/signIn").permitAll()
+				.antMatchers("/cronus.html").permitAll()
+				.antMatchers("/cronus-api.js").permitAll()
+				.antMatchers("/cronus-view.js").permitAll()
+				.antMatchers("/style.css").permitAll()
+				.anyRequest().authenticated().and()
 				.addFilter(new JwtAuthenticationFilter(authenticationManager(), userService))
 				.addFilter(new JwtAuthorizationFilter(authenticationManager())).sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);

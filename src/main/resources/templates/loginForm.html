@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Einloggen</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="Personenverwaltung" />
+<meta name="author" content="ZLI" />
+
+<!-- Bootstrap core CSS -->
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col-12">
+				<h1>Einloggen:</h1>
+				<form  th:object="${LoginData}"
+					method="post">
+					<p>
+						Name or Email: <input type="text" id="name" th:field="*{loginName}" />
+					</p>
+					<p>
+						Password: <input type="text" id="pass" th:field="*{loginPassword}" />
+					</p>
+					<p>
+						<input type="reset"value="Felder Zurücksetzen" />
+					</p>
+				</form>
+				<button value="Log In"
+					onclick="onLogin(document.getElementById('name').value, document.getElementById('pass').value)">Login</button>
+				<a th:href="@{/}"><li>Zurück</li></a>
+			</div>
+		</div>
+	</div>
+
+
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		
+		
+		<script type="text/javascript">
+		function onLogin(loginName, loginPass){
+		const Http = new XMLHttpRequest();
+		let url='http://localhost:8081/login?';
+		url += 'username=' + loginName + '&password=' + loginPass;
+		Http.open("POST", url);
+		Http.send();
+
+		Http.onreadystatechange = (e) => {
+			console.log(Http.getResponseHeader("authorization"));
+		  	localStorage.setItem("token", Http.getResponseHeader("authorization"));
+		  	window.location.href = "/cronus.html";
+		}}
+		</script>
+</body>
+</html>

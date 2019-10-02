@@ -8,4 +8,9 @@ Ein Admin-Konto kann alles überwachen.
 ## Getting Started
 Um die Applikation laufen zu lassen muss man lediglich einen MySQL Server Starten, das CreateDbSchema.sql welches unter src/main/resources abgelegt ist ausführen und das MavenProjekt importieren sowie ausführen.
 
+
+
+## App Benutzen
 Testdaten werden automatisch mittels dem unter src/main/resources abgelegten "Data.sql" Skript hineingefügt und somit kann man sich mit diesen am einfachsten einloggen.
+
+Das Gui startet bei Localhost:8081/ dor kann man sich ausloggen oder einloggen. Nach einloggen kommt man direkt zu seiner Liste.
