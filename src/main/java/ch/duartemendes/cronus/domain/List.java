@@ -2,13 +2,15 @@ package ch.duartemendes.cronus.domain;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 @Entity
 public class List {
@@ -16,13 +18,12 @@ public class List {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "idList", cascade = CascadeType.REMOVE)
-	@JsonIgnore
     private java.util.List<Entry> entries;
 
     @OneToOne(optional = false, cascade = CascadeType.REMOVE, orphanRemoval = true)
-	@JsonIgnore
 	private User idUser;
     
     private String name;

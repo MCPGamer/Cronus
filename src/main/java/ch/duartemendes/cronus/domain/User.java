@@ -10,9 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.validator.constraints.Length;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class User {
@@ -20,12 +20,11 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JsonIgnore
+	@LazyCollection(LazyCollectionOption.FALSE)
+	@ManyToMany
 	private java.util.List<Role> roles;
 
 	@OneToOne(mappedBy = "idUser", optional = false, cascade = CascadeType.REMOVE, orphanRemoval = true)
-	@JsonIgnore
 	private List list;
 
 	@Length(max = 20)

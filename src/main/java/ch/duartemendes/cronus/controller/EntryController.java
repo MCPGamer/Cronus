@@ -1,7 +1,5 @@
 package ch.duartemendes.cronus.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -16,6 +14,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.duartemendes.cronus.domain.Entry;
+import ch.duartemendes.cronus.dto.EntryDTO;
+import ch.duartemendes.cronus.mapper.EntryMapper;
 import ch.duartemendes.cronus.service.EntryService;
 
 @RestController
@@ -27,27 +27,45 @@ public class EntryController {
         this.entryService = entryService;
     }
 
+    /***
+     * Holt alle Einträge. Ab nächster Version auf Liste Limitiert.
+     */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<Entry> getAllEntries() {
-        return entryService.findAll();
+    public EntryDTO[] getAllEntries() {
+        return entryService.findAll()
+				.stream()
+				.map(EntryMapper.INSTANCE::entryToEntryDto)
+				.toArray(EntryDTO[]::new);
     }
 
+
+    /***
+     * Erstellen eines Neuen Eintrags
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Entry createEntry(@Valid @RequestBody Entry entry) {
-        return entryService.createEntry(entry);
+    public EntryDTO createEntry(@Valid @RequestBody Entry entry) {
+        return EntryMapper.INSTANCE.entryToEntryDto(entryService.createEntry(entry));
     }
     
+
+    /***
+     * Löschen eines Eintrags
+     */    
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteEntry(@PathVariable("id") Long id) {
         entryService.deleteEntry(id);
     }
     
+
+    /***
+     * Verändern eines Eintrags.
+     */
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Entry putEntry(@PathVariable("id") Long id, @Valid @RequestBody Entry entry) {
-        return entryService.updateEntry(id, entry);
+    public EntryDTO putEntry(@PathVariable("id") Long id, @Valid @RequestBody Entry entry) {
+        return EntryMapper.INSTANCE.entryToEntryDto(entryService.updateEntry(id, entry));
     }
 }

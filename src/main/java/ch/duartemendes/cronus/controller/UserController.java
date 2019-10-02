@@ -1,7 +1,5 @@
 package ch.duartemendes.cronus.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -16,38 +14,57 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.duartemendes.cronus.domain.User;
+import ch.duartemendes.cronus.dto.UserDTO;
+import ch.duartemendes.cronus.mapper.UserMapper;
 import ch.duartemendes.cronus.service.UserService;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    private UserService userService;
+	private UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+	public UserController(UserService userService) {
+		this.userService = userService;
+	}
 
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<User> getAllUsers() {
-        return userService.findAll();
-    }
+	/***
+	 * Hohlt eine Liste Aller Benutzer, wird in der nächsten Version nur dem Admin
+	 * zur verfügung Stehen.
+	 */
+	@GetMapping
+	@ResponseStatus(HttpStatus.OK)
+	public UserDTO[] getAllUsers() {
+		return userService.findAll()
+				.stream()
+				.map(UserMapper.INSTANCE::userToUserDto)
+				.toArray(UserDTO[]::new);
+	}
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public User createUser(@Valid @RequestBody User user) {
-        return userService.createUser(user);
-    }
-    
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable("id") Long id) {
-        userService.deleteUser(id);
-    }
-    
-    @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public User putUser(@PathVariable("id") Long id, @Valid @RequestBody User user) {
-        return userService.updateUser(id, user);
-    }
+	/***
+	 * Erstellt einen neuen Benutzer
+	 */
+	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
+	public UserDTO createUser(@Valid @RequestBody User user) {
+		return UserMapper.INSTANCE.userToUserDto(userService.createUser(user));
+	}
+
+	/***
+	 * Löscht einen Benutzer, Dies steht ab der nächsten Version nur dem Eigenen
+	 * Benutzer oder dem Admin zur verfügung.
+	 */
+	@DeleteMapping("/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void deleteUser(@PathVariable("id") Long id) {
+		userService.deleteUser(id);
+	}
+
+	/***
+	 * Dazu da um Daten wie z.B. ein Passwort eines Benutzers anzupassen
+	 */
+	@PutMapping("/{id}")
+	@ResponseStatus(HttpStatus.OK)
+	public UserDTO putUser(@PathVariable("id") Long id, @Valid @RequestBody User user) {
+		return UserMapper.INSTANCE.userToUserDto(userService.updateUser(id, user));
+	}
 }

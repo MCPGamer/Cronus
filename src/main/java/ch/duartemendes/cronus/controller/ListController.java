@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.duartemendes.cronus.domain.List;
+import ch.duartemendes.cronus.dto.ListDTO;
+import ch.duartemendes.cronus.mapper.ListMapper;
 import ch.duartemendes.cronus.service.ListService;
 
 @RestController
@@ -25,27 +27,42 @@ public class ListController {
         this.listService = listService;
     }
 
+    /***
+     * Zeigt alle Listen an. Ab Nächster Version nur für Admin alle und für Jede Person eigene.
+     */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public java.util.List<List> getAllLists() {
-        return listService.findAll();
+    public ListDTO[] getAllLists() {
+        return listService.findAll()
+				.stream()
+				.map(ListMapper.INSTANCE::listToListDto)
+				.toArray(ListDTO[]::new);
     }
 
+    /***
+     * Erstellt eine neue Liste.
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public List createList(@Valid @RequestBody List list) {
-        return listService.createList(list);
+    public ListDTO createList(@Valid @RequestBody List list) {
+        return ListMapper.INSTANCE.listToListDto(listService.createList(list));
     }
     
+    /***
+     * Löscht eine Liste. 
+     */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteList(@PathVariable("id") Long id) {
         listService.deleteList(id);
     }
     
+    /***
+     * Dient dazu die Liste umzubenennen.
+     */
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public List putList(@PathVariable("id") Long id, @Valid @RequestBody List list) {
-        return listService.updateList(id, list);
+    public ListDTO putList(@PathVariable("id") Long id, @Valid @RequestBody List list) {
+        return ListMapper.INSTANCE.listToListDto(listService.updateList(id, list));
     }
 }
