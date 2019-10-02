@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class List {
 
@@ -16,10 +18,12 @@ public class List {
     private Long id;
 
     @OneToMany(mappedBy = "idList", cascade = CascadeType.REMOVE)
+	@JsonIgnore
     private java.util.List<Entry> entries;
 
     @OneToOne(optional = false, cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private User idUser;
+	@JsonIgnore
+	private User idUser;
     
     private String name;
 

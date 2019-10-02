@@ -12,6 +12,8 @@ import javax.persistence.OneToOne;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class User {
 	@Id
@@ -19,9 +21,11 @@ public class User {
 	private Long id;
 
 	@ManyToMany(fetch = FetchType.EAGER)
+	@JsonIgnore
 	private java.util.List<Role> roles;
 
 	@OneToOne(mappedBy = "idUser", optional = false, cascade = CascadeType.REMOVE, orphanRemoval = true)
+	@JsonIgnore
 	private List list;
 
 	@Length(max = 20)

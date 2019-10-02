@@ -9,6 +9,8 @@ import javax.persistence.ManyToMany;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Role {
 	@Id
@@ -16,6 +18,7 @@ public class Role {
 	private Long id;
 
 	@ManyToMany(mappedBy = "roles")
+	@JsonIgnore
 	private java.util.List<User> users;
 	
     @Length(max = 20)

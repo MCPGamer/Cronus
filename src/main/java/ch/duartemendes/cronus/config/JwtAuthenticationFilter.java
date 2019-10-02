@@ -1,5 +1,6 @@
 package ch.duartemendes.cronus.config;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -48,7 +49,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         
         // Map Roles
         List<Role> roles = user.getRoles();
+        List<String> availableRoles = new ArrayList<String>();
 
+        for(Role role : roles) {
+        	availableRoles.add(role.getName());
+        }
+        
         byte[] signingKey = SecurityConstants.JWT_SECRET.getBytes();
 
         String token = Jwts.builder()
@@ -58,7 +64,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             .setAudience(SecurityConstants.TOKEN_AUDIENCE)
             .setSubject(user.getUsername())
             .setExpiration(new Date(System.currentTimeMillis() + 864000000))
-            .claim("rol", roles)
+            .claim("rol", availableRoles)
             .compact();
 
         response.addHeader(SecurityConstants.TOKEN_HEADER, SecurityConstants.TOKEN_PREFIX + token);
